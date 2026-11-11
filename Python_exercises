@@ -1582,3 +1582,61 @@
  "nbformat": 4,
  "nbformat_minor": 5
 }
+===========================================
+----SOLUTIONS---------
+full = orders2.merge(
+    customers,
+    on='CustomerID',
+    how='left'
+).merge(
+    products,
+    on='ProductID',
+    how='left'
+)
+
+--MISSING COUNT--
+full.isnull().sum()
+Name    1
+City    1
+
+--FILL MISSING VALUES--
+full['Name'] = full['Name'].fillna('Unknown')
+full['City'] = full['City'].fillna('Unknown')
+
+
+full['Revenue'] = full['Qty'] * full['Price']
+REVENUE VALUES
+55000
+1000
+55000
+4500
+500
+110000
+
+--GROUP BY--
+full.groupby('City')['Revenue']\
+    .sum()\
+    .sort_values(ascending=False)
+
+Pune         111000
+Hyderabad    110000
+Delhi          4500
+Unknown         500
+
+--WINNER--
+Pune
+
+--EXAMPLE QUESITIONS--
+Which customer generated the most revenue?
+full.groupby('Name')['Revenue']\
+    .sum()\
+    .sort_values(ascending=False)
+
+Answer:
+Ravi       111000
+Asha       110000
+Meena        4500
+Unknown       500
+
+Highest Revenue Customer
+Ravi
